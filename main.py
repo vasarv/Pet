@@ -19,6 +19,7 @@ def pet_id(pet_name: str):
     for id, pet in pets.items():
         if pet_name in pet:
             return id
+    return None
 
 
 def get_suffix(age: int) -> str:
@@ -63,9 +64,12 @@ def read(goal: str or int) -> str:
                 return f'{info['Вид питомца'].capitalize()} по кличке "{pet_name}". Возраст питомца: {info['Возраст питомца']} {get_suffix(info['Возраст питомца'])}. Имя владельца: {info['Имя владельца']}'
     return f"Не найдено записи с данной кличкой!"
 
-
 def update(pet_name: str):
     ID = pet_id(pet_name)
+    
+    if ID == None:
+        print("Данной записи не существует!")
+        return
 
     update_goal = int(input(f"Что Вы хотите изменить?\n"
                             f"1) Кличку\n"
@@ -74,23 +78,40 @@ def update(pet_name: str):
                             f"4) Имя владельца питомца\n\n"
                             "[Введите только цифру] -> ").strip())
 
-    change = int(input("Введите новое значение -> ")) if update_goal == 3 else input("Введите новое значение -> ")
+    change = input("Введите новое значение -> ") if update_goal == 3 else input("Введите новое значение -> ")
 
     if 0 < update_goal < 5:
         match update_goal:
             case 1:
+                if not change.strip():
+                    print("Кличка не может быть пустой! Попробуйте ещё раз")
+                    return
                 pets[ID] = {change: pets[ID].pop(pet_name)}
             case 2:
+                if not change.strip(): 
+                    print("Тип питомца не может быть пустым! Попробуйте ещё раз")
+                    return
                 pets[ID][pet_name]['Вид питомца'] = change
             case 3:
-                pets[ID][pet_name]['Возраст питомца'] = change
+                if not change.strip() or not change.isdigit() or isinstance(change, int):
+                    print("Возраст должен быть числом! Попробуйте ещё раз")
+                    return
+                pets[ID][pet_name]['Возраст питомца'] = int(change)
             case 4:
-                pets[ID][pet_name]['Имя владельца'] = change
+                if not change.strip():
+                    print("Имя хозяина не может быть пустым! Попробуйте ещё раз")
+                    return
+                pets[ID][pet_name]['Имя владельца'] = change 
 
+    print("Информация успешно обновлена!")
+    
     return pets
 
 
 def delete(pet_name: str):
+    if pet_id(pet_name) == None:
+        print("Данной записи не существует!")
+        return
     pets.pop(pet_id(pet_name))
     print(f"Запись и о питомце {pet_name} удалена")
 
@@ -135,8 +156,6 @@ def main():
                 update_input = input("Введите кличку питомца для обновления информации о нем -> ").strip()
 
                 update(update_input)
-
-                print("Информация успешно обновлена!")
             case "delete":
                 delete_input = input("Введите кличку питомца для удаления информации о нем -> ").strip()
 
