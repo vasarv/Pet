@@ -2,6 +2,14 @@ import collections
 
 pets = dict()
 
+def help():
+    print(
+        "Список возможных команд для ввода:\n"
+        "create - Создать новую запись о питомце\n"
+        "read - Прочитать запись о питомце\n"
+        "update - Обновить запись о питомце\n"
+        "delete - Удалить запись о питомце\n"
+        )
 
 def get_pet(ID: int) -> dict:
     return pets[ID] if ID in pets.keys() else False
@@ -90,29 +98,33 @@ def delete(pet_name: str):
 def main():
     command = ''
     while command != 'stop':
+        help()
         command = input("Введите команду: ").strip().lower()
 
         match command:
             case "create":
                 pet_info = input(f"Введите необходимые данные [Имя питомца, Тип питомца, Возраст питомца, Имя хозяина питомца] в формате (строка,строка) -> ").split(",")
-
-                PetName, TypeOfPet, AgeOfPet, OwnerName = pet_info[0], pet_info[1], pet_info[2], pet_info[3]
+                if len(pet_info) == 3:
+                    PetName, TypeOfPet, AgeOfPet, OwnerName = pet_info[0], pet_info[1], pet_info[2], pet_info[3]
+                else:
+                    print("Не верный формат ввода данных!")
+                    continue
 
                 create(PetName, TypeOfPet, AgeOfPet, OwnerName)
 
                 print('Питомец успешно добавлен!')
             case "read":
-                read_input = input("Введите кличку питомца для поиска: ").strip()
+                read_input = input("Введите кличку питомца для поиска -> ").strip()
 
                 print(read(read_input))
             case "update":
-                update_input = input("Введите кличку питомца для обновления информации о нем: ").strip()
+                update_input = input("Введите кличку питомца для обновления информации о нем -> ").strip()
 
                 update(update_input)
 
                 print("Информация успешно обновлена!")
             case "delete":
-                delete_input = input("Введите кличку питомца для удаления информации о нем: ").strip()
+                delete_input = input("Введите кличку питомца для удаления информации о нем -> ").strip()
 
                 delete(delete_input)
             case "stop":
