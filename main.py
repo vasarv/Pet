@@ -120,8 +120,6 @@ def main():
             case _:
                 print("Команда не распознана!")
 
-    raise KeyboardInterrupt
-
 
 if __name__ == "__main__":
     main()
