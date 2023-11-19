@@ -60,7 +60,7 @@ def read(goal: str or int) -> str:
     for pet_id, pet in pets.items():
         for pet_name, info in pet.items():
             if (str(goal).lower() in pet_name.lower() or goal == info['Возраст питомца'] or str(goal).lower() in info['Имя владельца'].lower()):
-                return f'{info['Вид питомца'].capitalize()} по кличке "{pet_name}". Возраст питомца: {info['Возраст питомца']} {get_suffix(info['Возраст питомца'])}. Имя владельца: {info['Имя владельца']}', pet_id
+                return f'{info['Вид питомца'].capitalize()} по кличке "{pet_name}". Возраст питомца: {info['Возраст питомца']} {get_suffix(info['Возраст питомца'])}. Имя владельца: {info['Имя владельца']}'
     return f"Не найдено записи с данной кличкой!"
 
 
@@ -103,15 +103,29 @@ def main():
 
         match command:
             case "create":
-                pet_info = input(f"Введите необходимые данные [Имя питомца, Тип питомца, Возраст питомца, Имя хозяина питомца] в формате (строка,строка) -> ").split(",")
-                if len(pet_info) == 3:
-                    PetName, TypeOfPet, AgeOfPet, OwnerName = pet_info[0], pet_info[1], pet_info[2], pet_info[3]
-                else:
-                    print("Не верный формат ввода данных!")
+                PetName = input("Введите кличку питомца -> ")
+                TypeOfPet = input("Введите тип (пароду) питомца -> ")  
+                AgeOfPet = input("Введите возраст питомца -> ")
+                OwnerName = input("Введите имя хозяина питомца -> ")
+                
+                if not PetName.strip():
+                    print("Кличка не может быть пустой! Попробуйте ещё раз")
+                    continue
+
+                if not TypeOfPet.strip(): 
+                    print("Тип питомца не может быть пустым! Попробуйте ещё раз")
+                    continue
+
+                if not AgeOfPet.strip() or not AgeOfPet.isdigit() or isinstance(AgeOfPet, int):
+                    print("Возраст должен быть числом! Попробуйте ещё раз")
+                    continue
+
+                if not OwnerName.strip():
+                    print("Имя хозяина не может быть пустым! Попробуйте ещё раз")
                     continue
 
                 create(PetName, TypeOfPet, AgeOfPet, OwnerName)
-
+                
                 print('Питомец успешно добавлен!')
             case "read":
                 read_input = input("Введите кличку питомца для поиска -> ").strip()
