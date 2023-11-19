@@ -116,7 +116,7 @@ def main():
 
                 delete(delete_input)
             case "stop":
-                ...
+                print("До встречи!")
             case _:
                 print("Команда не распознана!")
 
