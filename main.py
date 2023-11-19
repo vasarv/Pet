@@ -2,6 +2,7 @@ import collections
 
 pets = dict()
 
+
 def get_pet(ID: int) -> dict:
     return pets[ID] if ID in pets.keys() else False
 
@@ -29,6 +30,7 @@ def pets_list():
 
     return "\n".join(output)
 
+
 def create(PetName: int, TypeOfPet: str, AgeOfPet: int, OwnerName: str) -> None:
     new_pet = {
         PetName: {
@@ -42,7 +44,7 @@ def create(PetName: int, TypeOfPet: str, AgeOfPet: int, OwnerName: str) -> None:
         pet_id = 1
     else:
         pet_id = collections.deque(pets, maxlen=1)[0] + 1
-    
+
     pets[pet_id] = new_pet
 
 
