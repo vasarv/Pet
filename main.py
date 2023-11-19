@@ -125,7 +125,7 @@ def main():
         match command:
             case "create":
                 PetName = input("Введите кличку питомца -> ")
-                TypeOfPet = input("Введите тип (пароду) питомца -> ")  
+                TypeOfPet = input("Введите тип (пароду) питомца -> ")
                 AgeOfPet = input("Введите возраст питомца -> ")
                 OwnerName = input("Введите имя хозяина питомца -> ")
                 
