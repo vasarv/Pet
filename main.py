@@ -141,7 +141,6 @@ def update(pet_name: str):
     
     return pets
 
-
 def delete(pet_name: str):
     from pprint import pprint
     IDs = search_pet(pet_name)
@@ -216,9 +215,11 @@ def main():
                 delete(delete_input)
             case "stop":
                 print("До встречи!")
+                break
             case _:
                 print("Команда не распознана!")
 
 
 if __name__ == "__main__":
     main()
+    exit()
