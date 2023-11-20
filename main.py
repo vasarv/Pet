@@ -1,6 +1,12 @@
 import collections
 
-pets = dict()
+# pets = dict()
+pets = {1 : {'Джек' : {'Вид питомца' : 'овчарка', 'Возраст питомца' : 5, 'Имя владельца' : 'Олег'}},
+        2: {'Джек' : {'Вид питомца' : 'кот', 'Возраст питомца' : 1, 'Имя владельца' : 'Вика'}},
+        3: {'Каркарыч': {'Вид питомца' : 'ворон', 'Возраст питомца' : 10, 'Имя владельца' : 'Миша'}},
+        4: {'Мурзик': {'Вид питомца' : 'ворон', 'Возраст питомца' : 15, 'Имя владельца' : 'Антон'}},
+        5: {'Маня': {'Вид питомца' : 'чихуа', 'Возраст питомца' : 3, 'Имя владельца' : 'Женя'}},
+        6: {'Рекс': {'Вид питомца' : 'кот', 'Возраст питомца' : 5, 'Имя владельца' : 'Анна'}}}
 
 def help():
     print(
@@ -8,7 +14,7 @@ def help():
         "create - Создать новую запись о питомце\n"
         "read - Прочитать запись о питомце\n"
         "update - Обновить запись о питомце\n"
-        "delete - Удалить запись о питомце\n"
+        "delete - Удалить запись о питомце"
         )
 
 def get_pet(ID: int) -> dict:
@@ -21,6 +27,13 @@ def pet_id(pet_name: str):
             return id
     return None
 
+def search_pet(pet_name: str):
+    ids = []
+    for id, pet in pets.items():
+        if pet_name in pet:
+            ids.append(id)
+
+    return None if ids == [] else ids #, [pets[ID] for ID in ids]
 
 def get_suffix(age: int) -> str:
     if age == 1:
@@ -58,19 +71,38 @@ def create(PetName: int, TypeOfPet: str, AgeOfPet: int, OwnerName: str) -> None:
 
 
 def read(goal: str or int) -> str:
+    out = "Записи найдены:\n"
     for pet_id, pet in pets.items():
         for pet_name, info in pet.items():
             if (str(goal).lower() in pet_name.lower() or goal == info['Возраст питомца'] or str(goal).lower() in info['Имя владельца'].lower()):
-                return f'{info['Вид питомца'].capitalize()} по кличке "{pet_name}". Возраст питомца: {info['Возраст питомца']} {get_suffix(info['Возраст питомца'])}. Имя владельца: {info['Имя владельца']}'
-    return f"Не найдено записи с данной кличкой!"
+                out += f'{info['Вид питомца'].capitalize()} по кличке "{pet_name}". Возраст питомца: {info['Возраст питомца']} {get_suffix(info['Возраст питомца'])}. Имя владельца: {info['Имя владельца']}\n'
+    return f"Не найдено записи с данной кличкой!" if out == "Записи найдены:\n" else out
 
 def update(pet_name: str):
-    ID = pet_id(pet_name)
-    
-    if ID == None:
-        print("Данной записи не существует!")
-        return
+    from pprint import pprint
+    IDs = search_pet(pet_name)
 
+    if IDs == None:
+        print("Данной записи не найдено!")
+        return
+    elif len(IDs) > 1:
+        print("Найдено несколько записей: ")
+        choise = {}
+        for num in range(len(IDs)):
+            
+            choise[num + 1] = IDs[num]
+            for pet_name, info in pets[IDs[num]].items():
+                print(f'Номер: {num + 1} | {info['Вид питомца'].capitalize()} по кличке "{pet_name}". Возраст питомца: {info['Возраст питомца']} {get_suffix(info['Возраст питомца'])}. Имя владельца: {info['Имя владельца']}')
+        ID = str()
+        while type(ID) == str:
+            ID = input(f"\nВведите номер нужной записи для обновления информации о питомце -> ")
+            if not ID.strip() or not ID.isdigit() or isinstance(ID, int):
+                        print("Номер должен быть числом! Попробуйте ещё раз")
+            else:
+                ID = int(ID)
+    else:
+        ID = int(IDs[0])
+    
     update_goal = int(input(f"Что Вы хотите изменить?\n"
                             f"1) Кличку\n"
                             f"2) Вид питомца\n"
@@ -79,6 +111,8 @@ def update(pet_name: str):
                             "[Введите только цифру] -> ").strip())
 
     change = input("Введите новое значение -> ") if update_goal == 3 else input("Введите новое значение -> ")
+
+
 
     if 0 < update_goal < 5:
         match update_goal:
@@ -101,7 +135,7 @@ def update(pet_name: str):
                 if not change.strip():
                     print("Имя хозяина не может быть пустым! Попробуйте ещё раз")
                     return
-                pets[ID][pet_name]['Имя владельца'] = change 
+                pets[ID][pet_name]['Имя владельца'] = change
 
     print("Информация успешно обновлена!")
     
@@ -109,10 +143,31 @@ def update(pet_name: str):
 
 
 def delete(pet_name: str):
-    if pet_id(pet_name) == None:
-        print("Данной записи не существует!")
+    from pprint import pprint
+    IDs = search_pet(pet_name)
+
+    if IDs == None:
+        print("Данной записи не найдено!")
         return
-    pets.pop(pet_id(pet_name))
+    elif len(IDs) > 1:
+        print("Найдено несколько записей: ")
+        choise = {}
+        for num in range(len(IDs)):
+            
+            choise[num + 1] = IDs[num]
+            for pet_name, info in pets[IDs[num]].items():
+                print(f'Номер: {num + 1} | {info['Вид питомца'].capitalize()} по кличке "{pet_name}". Возраст питомца: {info['Возраст питомца']} {get_suffix(info['Возраст питомца'])}. Имя владельца: {info['Имя владельца']}')
+        ID = str()
+        while type(ID) == str:
+            ID = input(f"\nВведите номер нужной записи для удаления -> ")
+            if not ID.strip() or not ID.isdigit() or isinstance(ID, int):
+                        print("Номер должен быть числом! Попробуйте ещё раз")
+            else:
+                ID = int(ID)
+    else:
+        ID = int(IDs[0])
+
+    pets.pop(ID)
     print(f"Запись и о питомце {pet_name} удалена")
 
 
@@ -125,22 +180,21 @@ def main():
         match command:
             case "create":
                 PetName = input("Введите кличку питомца -> ")
-                TypeOfPet = input("Введите тип (пароду) питомца -> ")
-                AgeOfPet = input("Введите возраст питомца -> ")
-                OwnerName = input("Введите имя хозяина питомца -> ")
-                
                 if not PetName.strip():
                     print("Кличка не может быть пустой! Попробуйте ещё раз")
                     continue
 
+                TypeOfPet = input("Введите тип (пароду) питомца -> ")
                 if not TypeOfPet.strip(): 
                     print("Тип питомца не может быть пустым! Попробуйте ещё раз")
                     continue
 
+                AgeOfPet = input("Введите возраст питомца -> ")
                 if not AgeOfPet.strip() or not AgeOfPet.isdigit() or isinstance(AgeOfPet, int):
                     print("Возраст должен быть числом! Попробуйте ещё раз")
                     continue
 
+                OwnerName = input("Введите имя хозяина питомца -> ")
                 if not OwnerName.strip():
                     print("Имя хозяина не может быть пустым! Попробуйте ещё раз")
                     continue
